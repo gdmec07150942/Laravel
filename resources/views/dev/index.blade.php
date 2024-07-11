@@ -6,10 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Executor</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 4rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .btn-custom {
+            min-width: 120px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1>SQL Executor</h1>
+    <h1 class="mb-4">SQL Executor</h1>
 
     <form method="POST" action="{{ route('execute.sql') }}">
         @csrf
@@ -17,9 +31,11 @@
             <label for="sql" class="form-label">SQL Query</label>
             <textarea name="sql" id="sql" rows="5" class="form-control">{{ old('sql') }}</textarea>
         </div>
-        <button type="submit" name="execute" class="btn btn-primary">Execute</button>
-        <button type="submit" name="export_excel" class="btn btn-success">Export Excel</button>
-        <button type="submit" name="export_json" class="btn btn-info">Export JSON</button>
+        <div class="mb-3">
+            <button type="submit" name="execute" class="btn btn-primary btn-custom">Execute</button>
+            <button type="submit" name="export_excel" class="btn btn-success btn-custom">Export Excel</button>
+            <button type="submit" name="export_json" class="btn btn-info btn-custom">Export JSON</button>
+        </div>
     </form>
 
     @if(isset($error))
@@ -31,8 +47,8 @@
     @if(isset($result) && !isset($error))
         <h3 class="mt-5">Result:</h3>
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
                 <tr>
                     @if(!empty($result->first()))
                         @foreach(array_keys((array)$result->first()) as $column)
@@ -58,5 +74,7 @@
         </div>
     @endif
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
