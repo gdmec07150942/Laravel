@@ -24,6 +24,7 @@ class DevController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|mixed
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function executeSql(Request $request)
     {
