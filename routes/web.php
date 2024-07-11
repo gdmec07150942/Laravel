@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::middleware(['permission:admin'])->group(function () {
         Route::get('/dev', [App\Http\Controllers\DevController::class, 'index']);
-        Route::post('/dev', [App\Http\Controllers\DevController::class, 'executeSql']);
+        Route::post('/dev', [App\Http\Controllers\DevController::class, 'executeSql'])->name('execute.sql');
     });
 });
 

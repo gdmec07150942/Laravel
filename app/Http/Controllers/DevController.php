@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SqlExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Maatwebsite\Excel\Facades\Excel; // Import Excel facade
 
 class DevController extends Controller
 {
@@ -23,6 +25,13 @@ class DevController extends Controller
 
         try {
             $results = DB::select($sql);
+            // Check if export requested
+            if ($request->has('export_excel')) {
+                return $this->exportToExcel($results);
+            } elseif ($request->has('export_json')) {
+                return response()->json($results);
+            }
+
             $result = $this->paginate($results, $perPage, $page);
         } catch (\Exception $e) {
             $error = $e->getMessage();
@@ -44,6 +53,16 @@ class DevController extends Controller
         $page = $page ?: (LengthAwarePaginator::resolveCurrentPage() ?: 1);
         $items = is_array($items) ? collect($items) : $items;
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    private function exportToExcel($data)
+    {
+        // Example using Maatwebsite Excel package
+        return Excel::download(new SqlExport($data), 'sql_export.xlsx');
     }
 }
 

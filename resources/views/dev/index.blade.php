@@ -11,13 +11,15 @@
 <div class="container">
     <h1>SQL Executor</h1>
 
-    <form method="POST" action="/dev">
+    <form method="POST" action="{{ route('execute.sql') }}">
         @csrf
         <div class="mb-3">
             <label for="sql" class="form-label">SQL Query</label>
             <textarea name="sql" id="sql" rows="5" class="form-control">{{ old('sql') }}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Execute</button>
+        <button type="submit" name="execute" class="btn btn-primary">Execute</button>
+        <button type="submit" name="export_excel" class="btn btn-success">Export Excel</button>
+        <button type="submit" name="export_json" class="btn btn-info">Export JSON</button>
     </form>
 
     @if(isset($error))
