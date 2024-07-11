@@ -28,7 +28,7 @@
         </div>
     @endif
 
-    @if(isset($result))
+    @if(isset($result) && !isset($error))
         <h3 class="mt-5">Result:</h3>
         <div class="table-responsive">
             <table class="table table-striped">
