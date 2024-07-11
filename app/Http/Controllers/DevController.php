@@ -7,7 +7,9 @@ use App\Models\SqlLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Maatwebsite\Excel\Facades\Excel; // Import Excel facade
+use Maatwebsite\Excel\Facades\Excel;
+
+// Import Excel facade
 
 class DevController extends Controller
 {
@@ -25,7 +27,11 @@ class DevController extends Controller
      */
     public function executeSql(Request $request)
     {
-        $sql = $request->input('sql');
+        $this->validate($request, [
+            'sql' => 'required|string',
+        ]);
+
+        $sql = filter_var($request->input('sql'), FILTER_SANITIZE_STRING);
         $page = $request->input('page', 1);
         $user = auth()->user(); // get login user
         $perPage = 10;  // Number of rows per page
