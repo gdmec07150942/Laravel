@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SqlExport;
+use App\Models\SqlLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -10,15 +11,23 @@ use Maatwebsite\Excel\Facades\Excel; // Import Excel facade
 
 class DevController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function index()
     {
         return view('dev.index');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Http\JsonResponse|mixed
+     */
     public function executeSql(Request $request)
     {
         $sql = $request->input('sql');
         $page = $request->input('page', 1);
+        $user = auth()->user(); // get login user
         $perPage = 10;  // Number of rows per page
         $result = [];
         $error = null;
@@ -36,6 +45,13 @@ class DevController extends Controller
         } catch (\Exception $e) {
             $error = $e->getMessage();
         }
+
+        // record log
+        SqlLog::query()->create([
+            'user_id' => $user->id,
+            'sql_query' => $sql,
+            'error_message' => $error,
+        ]);
 
         return view('dev.index', compact('result', 'error'));
     }
